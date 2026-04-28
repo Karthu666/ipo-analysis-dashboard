@@ -1,13 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IPO Dashboard</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium IPO Analytics</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/App.jsx"></script>
-  </body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold tracking-tight text-sky-400">IPO Analysis <span class="text-white">v2.0</span></h1>
+            <input type="text" id="search" placeholder="Search sector or company..." class="glass rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 ring-sky-500 w-64">
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="glass p-6 rounded-2xl">
+                <p class="text-slate-400 text-sm">Total Companies</p>
+                <p class="text-4xl font-bold">45</p>
+            </div>
+            <div class="glass p-6 rounded-2xl border-l-4 border-green-500">
+                <p class="text-slate-400 text-sm">Top Sector</p>
+                <p class="text-4xl font-bold text-green-400">Defense</p>
+            </div>
+            <div class="glass p-6 rounded-2xl border-l-4 border-sky-500">
+                <p class="text-slate-400 text-sm">Avg. Listing Gain</p>
+                <p class="text-4xl font-bold text-sky-400">32.4%</p>
+            </div>
+        </div>
+
+        <div class="glass p-6 rounded-2xl h-[500px]">
+            <canvas id="ipoChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Paste your RAW data array here from Claude!
+        const data = [
+            { name: 'HAL', sector: 'Defense', gain: 85 },
+            { name: 'Zomato', sector: 'Tech', gain: 52 },
+            { name: 'Paytm', sector: 'Fintech', gain: -27 },
+            // Add all your 45 companies here...
+        ];
+
+        const ctx = document.getElementById('ipoChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(d => d.name),
+                datasets: [{
+                    label: 'Listing Gain %',
+                    data: data.map(d => d.gain),
+                    backgroundColor: data.map(d => d.gain > 0 ? '#10b981' : '#ef4444'),
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+    </script>
+</body>
 </html>
